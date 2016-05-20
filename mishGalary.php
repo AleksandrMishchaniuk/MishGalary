@@ -24,14 +24,16 @@ Author URI:
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
+namespace MishGalary;
 
 define( 'MISHGALARY_PLUGIN_NAME', 'MishGalary' );
 define( 'MISHGALARY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MISHGALARY_PAGE_NAME', 'mish_galary' );
+define( 'MISHGALARY_DB_TABLE', 'wp_mish_galary' );
+define( 'MISHGALARY_SHORTCODE', 'mish_galary' );
 
-require_once( MISHGALARY_PLUGIN_DIR . 'lib/MishGalary.php' );
-
-$mishGalary = new MishGalary();
-$mishGalary->run();
-
+if(is_admin()){
+    require_once( MISHGALARY_PLUGIN_DIR . 'lib/MishGalary.php' );
+    $adminPage = new AdminPage();
+    $adminPage->run();
+}
