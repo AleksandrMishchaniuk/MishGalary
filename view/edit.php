@@ -50,6 +50,9 @@
 
         <button type="submit" name="submit" value="true"><?= $submit_btn; ?></button>
         <button type="submit" name="submit" value="false">Отменить</button>
+        <?php if($pagetype === 'edit'): ?>
+            <input type="hidden" name="id" value="<?= $galary->id; ?>"/>
+        <?php endif; ?>
     </div>
 </form>
 

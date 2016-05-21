@@ -27,13 +27,17 @@ Author URI:
 namespace MishGalary;
 
 define( 'MISHGALARY_PLUGIN_NAME', 'MishGalary' );
+define( 'MISHGALARY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'MISHGALARY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MISHGALARY_PAGE_NAME', 'mish_galary' );
 define( 'MISHGALARY_DB_TABLE', 'wp_mish_galary' );
 define( 'MISHGALARY_SHORTCODE', 'mish_galary' );
 
 if(is_admin()){
-    require_once( MISHGALARY_PLUGIN_DIR . 'lib/MishGalary.php' );
-    $adminPage = new AdminPage();
-    $adminPage->run();
+    require_once( MISHGALARY_PLUGIN_DIR . 'lib/AdminPage.php' );
+    $mishGalary_adminPage = new AdminPage();
+    $mishGalary_adminPage->run();
 }
+require_once( MISHGALARY_PLUGIN_DIR . 'lib/Plugin.php' );
+$mishGalary_plugin = new Plugin();
+$mishGalary_plugin->run();
