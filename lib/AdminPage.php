@@ -24,11 +24,16 @@ class AdminPage {
         $page_hook_suffix = add_menu_page('MishGallery: Настройки', 'MishGallery', 8, 
                                             MISHGALLERY_PAGE_NAME, array($this, 'render'));
         add_action('admin_print_scripts-' . $page_hook_suffix, array($this, 'includeScripts'));
+        add_action('admin_print_styles-' . $page_hook_suffix, array($this, 'includeStyles'));
         
     }
     
     public function includeScripts() {
         wp_enqueue_media();
+    }
+    
+    public function includeStyles() {
+        wp_enqueue_style( MISHGALLERY_PLUGIN_NAME.'_admin_page', MISHGALLERY_PLUGIN_URL.'css/admin-page.css');
     }
     
     public function render() {

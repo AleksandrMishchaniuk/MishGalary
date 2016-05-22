@@ -9,7 +9,13 @@
 <h2>Доступные галереи</h2>
 <hr/>
 <br/>
-<table>
+<table class="mishGallery_table">
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Shortcode</th>
+        <th></th>
+    </tr>
     <?php foreach ($galaries as $gallery): ?>
     <tr>
         <td>
@@ -23,8 +29,19 @@
         </td>
         <td>
             <a href="<?= $href_to_edit.$gallery->id ?>">Редактировать</a>
-            <a href="<?= $href_to_delete.$gallery->id ?>">Удалить</a>
+            <a href="<?= $href_to_delete.$gallery->id ?>" class="mishGallery_delete_gallery">Удалить</a>
         </td>
     </tr>
     <?php endforeach; ?>
 </table>
+
+<script>
+    jQuery(function($){
+        $('.mishGallery_delete_gallery').click(function(){
+            var text = 'Вы уверены что хотите удалить эту галерею ???';
+            if(!confirm(text)){
+                return false;
+            }
+        });
+    });
+</script>

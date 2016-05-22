@@ -1,0 +1,41 @@
+.mishGallery_table td{
+    padding: 5px 10px;
+}
+
+
+textarea[name='description']{
+    width: 500px;
+    height: 100px;
+    margin: 10px auto 20px;
+}
+input[name='title']{
+    width: 500px;
+    margin: 10px auto 20px;
+}
+
+.mishGallery_admin_page_images_div{
+    min-height: 270px;
+    margin: 10px auto;
+}
+
+.mishGallery_admin_page_image_div{
+    margin: 10px;
+    text-align: center;
+    float: left;
+}
+
+.mishGallery_admin_page_image_wrap{
+    height: 200px;
+    width: 200px;
+    vertical-align: middle;
+}
+
+.mishGallery_admin_page_image{
+    max-height: 100%;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.mishGallery_admin_page_image_buttons{
+    padding: 10px 5px;
+}

@@ -8,16 +8,20 @@
 <hr/>
 
 <form method="POST">
+    <label for="title"><strong>Название галереи</strong></label><br/>
     <input type="text" name="title" placeholder="Название галереи" value="<?= $gallery->title; ?>"/><br/>
-    <textarea style="width: 400px;" name="description" placeholder="Краткое описание"><?= $gallery->description; ?></textarea><br/>
+    <label for="description"><strong>Описание галереи</strong></label><br/>
+    <textarea name="description" placeholder="Краткое описание"><?= $gallery->description; ?></textarea><br/>
     
-    <div class="div_mg_imgs">
+    <button type="button" class="add_img">Добавить изображение</button><br/>
+    
+    <div class="mishGallery_admin_page_images_div">
         
-        <div class="div_mg_img" id="div_mg_img_template" style="display: none; float: left;">
-            <div style="width: 200px; height: 200px">
-                <img src="" style="max-height: 100%; max-width: 100%;"/>
+        <div class="mishGallery_admin_page_image_div" id="div_mg_img_template" style="display: none;">
+            <div class="mishGallery_admin_page_image_wrap">
+                <img src="" style="max-height: 100%; max-width: 100%;" class="mishGallery_admin_page_image"/>
             </div>
-            <div class="div_mg_img_buttons">
+            <div class="mishGallery_admin_page_image_buttons">
                 <button type="button" class="change_img">Изменить</button>
                 <button type="button" class="delete_img">Удалить</button>
             </div>
@@ -27,14 +31,17 @@
         <?php if(!empty($gallery->images)): ?>
             <?php foreach($gallery->images as $image_id): ?>
                 <?php
-                    $image_attributes = wp_get_attachment_image_src( $image_id );
+                    $image_attributes = wp_get_attachment_image_src( $image_id, 'full' );
                     $src = $image_attributes[0];
+                    if(!$src){
+                        $src = MISHGALLERY_PLUGIN_URL.'img/default.gif';
+                    }
                 ?>
-                <div class="div_mg_img" style="float: left;">
-                    <div style="width: 200px; height: 200px">
-                        <img src="<?= $src; ?>" style="max-height: 100%; max-width: 100%;"/>
+                <div class="mishGallery_admin_page_image_div">
+                    <div class="mishGallery_admin_page_image_wrap">
+                        <img src="<?= $src; ?>" class="mishGallery_admin_page_image"/>
                     </div>
-                    <div class="div_mg_img_buttons">
+                    <div class="mishGallery_admin_page_image_buttons">
                         <button type="button" class="change_img">Изменить</button>
                         <button type="button" class="delete_img">Удалить</button>
                     </div>
@@ -45,9 +52,9 @@
         <?php endif; ?>
         
     </div>
-    <div class="div_mg_buttons" style="clear: both;">
+    <div class="mishGallery_admin_page_buttons" style="clear: both;">
         <button type="button" class="add_img">Добавить изображение</button><br/>
-
+        <br/>
         <button type="submit" name="submit" value="true"><?= $submit_btn; ?></button>
         <button type="submit" name="submit" value="false">Отменить</button>
         <?php if($pagetype === 'edit'): ?>
@@ -73,7 +80,7 @@ jQuery(function($){
             $('[type="hidden"]', div.get(0)).val(attachment.id).attr('name', 'img_'+index);
             $('.change_img', div.get(0)).click(changeImgAction);
             $('.delete_img', div.get(0)).click(deleteImgAction);
-            $('.div_mg_imgs').append(div);
+            $('.mishGallery_admin_page_images_div').append(div);
             wp.media.editor.send.attachment = send_attachment_bkp;
         }
         wp.media.editor.open(button);
@@ -85,7 +92,7 @@ jQuery(function($){
         var send_attachment_bkp = wp.media.editor.send.attachment;
         var button = $(this);
         wp.media.editor.send.attachment = function(props, attachment){
-            var div = button.parents('.div_mg_img');
+            var div = button.parents('.mishGallery_admin_page_image_div');
             $('img', div.get(0)).attr('src', attachment.url);
             $('[type="hidden"]', div.get(0)).val(attachment.id);
             wp.media.editor.send.attachment = send_attachment_bkp;
@@ -94,7 +101,7 @@ jQuery(function($){
     };
     
     function deleteImgAction(){
-        $(this).parents('.div_mg_img').remove();
+        $(this).parents('.mishGallery_admin_page_image_div').remove();
     }
 });
 </script>
