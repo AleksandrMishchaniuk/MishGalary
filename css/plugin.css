@@ -1,0 +1,26 @@
+.mishGallery_wrap{
+    margin: 30px 0;
+    background: dimgray;
+    color: white;
+}
+
+.mishGallery_title{
+    border-bottom: 2px solid darkgray;
+}
+
+.mishGallery_title h3{
+    margin: 0 !important;
+    padding: 15px 20px;
+    text-align: center;
+}
+
+.mishGallery_description p{
+    margin: 0 !important;
+    padding: 10px 20px;
+    text-align: justify;
+    text-indent: 20px;
+}
+
+.mishGallery_images{
+    height: 400px;
+}
