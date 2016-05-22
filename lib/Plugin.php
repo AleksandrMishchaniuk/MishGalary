@@ -12,27 +12,27 @@ class Plugin {
     }
     
     public function run() {
-        register_activation_hook( __FILE__, array( $this, 'install' ) );
-        register_uninstall_hook( __FILE__, array( $this, 'uninstall' ) );
         add_shortcode(MISHGALLERY_SHORTCODE, array($this, 'showGallery'));
         add_action( 'wp_enqueue_scripts', array($this, 'includeScripts') );
         add_action( 'wp_enqueue_scripts', array($this, 'includeStyles') );
     }
     
-    public function install() {
+    public static function install() {
+        global $wpdb;
         $query = "CREATE TABLE IF NOT EXISTS `".MISHGALLERY_DB_TABLE."` (
                     `id` int(11) NOT NULL AUTO_INCREMENT,
                     `title` varchar(255) NOT NULL,
                     `description` text NOT NULL,
                     `images` text NOT NULL,
                     PRIMARY KEY (`id`)
-                  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;";
-        $this->db->query($query);
+                  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
+        $wpdb->query($query);
     }
     
-    public function uninstall() {
+    public static function uninstall() {
+        global $wpdb;
         $query = "DROP TABLE IF EXISTS `".MISHGALLERY_DB_TABLE."`;";
-        $this->db->query($query);
+        $wpdb->query($query);
     }
 
     public function includeScripts() {

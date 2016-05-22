@@ -41,3 +41,6 @@ if(is_admin()){
 require_once( MISHGALLERY_PLUGIN_DIR . 'lib/Plugin.php' );
 $mishGallery_plugin = new Plugin();
 $mishGallery_plugin->run();
+
+register_activation_hook( __FILE__, array( '\MishGallery\Plugin', 'install' ) );
+register_uninstall_hook( __FILE__, array( '\MishGallery\Plugin', 'uninstall' ) );

@@ -63,7 +63,7 @@ class AdminPage {
     
     
     public function indexAction() {
-        $this->params['galaries'] = $this->db->get_results('SELECT id, title FROM '.MISHGALLERY_DB_TABLE);
+        $this->params['galleries'] = $this->db->get_results('SELECT id, title FROM '.MISHGALLERY_DB_TABLE);
         $this->render_page = MISHGALLERY_PLUGIN_DIR.'view/index.php';
     }
     

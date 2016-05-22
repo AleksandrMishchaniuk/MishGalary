@@ -9,31 +9,33 @@
 <h2>Доступные галереи</h2>
 <hr/>
 <br/>
-<table class="mishGallery_table">
-    <tr>
-        <th>ID</th>
-        <th>Название</th>
-        <th>Shortcode</th>
-        <th></th>
-    </tr>
-    <?php foreach ($galaries as $gallery): ?>
-    <tr>
-        <td>
-            <?= $gallery->id; ?>
-        </td>
-        <td>
-            <?= $gallery->title; ?>
-        </td>
-        <td>
-            <?= '['.MISHGALLERY_SHORTCODE.' id='.$gallery->id.']'; ?>
-        </td>
-        <td>
-            <a href="<?= $href_to_edit.$gallery->id ?>">Редактировать</a>
-            <a href="<?= $href_to_delete.$gallery->id ?>" class="mishGallery_delete_gallery">Удалить</a>
-        </td>
-    </tr>
-    <?php endforeach; ?>
-</table>
+<?php if(!empty($galleries)): ?>
+    <table class="mishGallery_table">
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Shortcode</th>
+            <th></th>
+        </tr>
+        <?php foreach ($galleries as $gallery): ?>
+        <tr>
+            <td>
+                <?= $gallery->id; ?>
+            </td>
+            <td>
+                <?= $gallery->title; ?>
+            </td>
+            <td>
+                <?= '['.MISHGALLERY_SHORTCODE.' id='.$gallery->id.']'; ?>
+            </td>
+            <td>
+                <a href="<?= $href_to_edit.$gallery->id ?>">Редактировать</a>
+                <a href="<?= $href_to_delete.$gallery->id ?>" class="mishGallery_delete_gallery">Удалить</a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+<?php endif; ?>
 
 <script>
     jQuery(function($){
