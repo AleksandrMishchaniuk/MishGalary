@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: mishGallery
+Plugin Name: MishGallery
 Plugin URI: 
 Description: Simple gallery for Wordpress
 Version: 1.0.0
