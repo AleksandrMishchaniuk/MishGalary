@@ -1,2 +1,2 @@
-Galleria.loadTheme(location.protocol+'//'+location.host+'/wp-content/plugins/mishGalary/galleria/themes/classic/galleria.classic.min.js');
-Galleria.run('.galleria');
+Galleria.loadTheme(location.protocol+'//'+location.host+'/wp-content/plugins/mishGallery/galleria/themes/classic/galleria.classic.min.js');
+Galleria.run('.mishGallery_images');

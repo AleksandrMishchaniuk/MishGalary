@@ -14,11 +14,16 @@ class Plugin {
     public function run() {
         add_shortcode(MISHGALLERY_SHORTCODE, array($this, 'showGallery'));
         add_action( 'wp_enqueue_scripts', array($this, 'includeScripts') );
+        add_action( 'wp_enqueue_scripts', array($this, 'includeStyles') );
     }
     
     public function includeScripts() {
         wp_enqueue_script( 'galleria', MISHGALLERY_PLUGIN_URL.'galleria/galleria-1.4.2.min.js', array('jquery') );
         wp_enqueue_script( 'myscript', MISHGALLERY_PLUGIN_URL.'js/main.js', array('galleria') );
+    }
+    
+    public function includeStyles() {
+        wp_enqueue_style( MISHGALLERY_PLUGIN_NAME.'_plugin', MISHGALLERY_PLUGIN_URL.'css/plugin.css');
     }
     
     public function showGallery($param) {
