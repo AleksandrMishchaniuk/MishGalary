@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: MishGallery
-Plugin URI: 
+Plugin URI: https://github.com/AleksandrMishchaniuk/mishGalary.git
 Description: Simple gallery for Wordpress
 Version: 1.0.0
 Author: Aleksandr Mishchaniuk
-Author URI: 
+Author URI: https://github.com/AleksandrMishchaniuk
 */
 
 /*  Copyright 2008  Jenyay  (email : jenyay.ilin {at} gmail.com)
@@ -35,12 +35,10 @@ define( 'MISHGALLERY_SHORTCODE', 'mish_gallery' );
 
 if(is_admin()){
     require_once( MISHGALLERY_PLUGIN_DIR . 'lib/AdminPage.php' );
-    $mishGallery_adminPage = new AdminPage();
-    $mishGallery_adminPage->run();
+    AdminPage::run();
 }
 require_once( MISHGALLERY_PLUGIN_DIR . 'lib/Plugin.php' );
-$mishGallery_plugin = new Plugin();
-$mishGallery_plugin->run();
+Plugin::run();
 
-register_activation_hook( __FILE__, array( '\MishGallery\Plugin', 'install' ) );
-register_uninstall_hook( __FILE__, array( '\MishGallery\Plugin', 'uninstall' ) );
+register_activation_hook( __FILE__, array( __NAMESPACE__.'\Plugin', 'install' ) );
+register_uninstall_hook( __FILE__, array( __NAMESPACE__.'\Plugin', 'uninstall' ) );

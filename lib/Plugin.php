@@ -4,21 +4,23 @@ namespace MishGallery;
 
 class Plugin {
     
-    protected $db;
+    protected static $db = NULL;
 
-    public function __construct() {
-        global $wpdb;
-        $this->db = $wpdb;
+    public static function getDb() {
+        if(!self::$db){
+            global $wpdb;
+            self::$db = $wpdb;
+        }
+        return self::$db;
     }
     
-    public function run() {
-        add_shortcode(MISHGALLERY_SHORTCODE, array($this, 'showGallery'));
-        add_action( 'wp_enqueue_scripts', array($this, 'includeScripts') );
-        add_action( 'wp_enqueue_scripts', array($this, 'includeStyles') );
+    public static function run() {
+        add_shortcode(MISHGALLERY_SHORTCODE, array(__CLASS__, 'showGallery'));
+        add_action( 'wp_enqueue_scripts', array(__CLASS__, 'includeScripts') );
+        add_action( 'wp_enqueue_scripts', array(__CLASS__, 'includeStyles') );
     }
     
     public static function install() {
-        global $wpdb;
         $query = "CREATE TABLE IF NOT EXISTS `".MISHGALLERY_DB_TABLE."` (
                     `id` int(11) NOT NULL AUTO_INCREMENT,
                     `title` varchar(255) NOT NULL,
@@ -26,27 +28,33 @@ class Plugin {
                     `images` text NOT NULL,
                     PRIMARY KEY (`id`)
                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
-        $wpdb->query($query);
+        self::getDb()->query($query);
+//        add_option(MISHGALLERY_PAGE_NAME.'_notice');
     }
     
     public static function uninstall() {
-        global $wpdb;
         $query = "DROP TABLE IF EXISTS `".MISHGALLERY_DB_TABLE."`;";
-        $wpdb->query($query);
+        self::getDb()->query($query);
+//        delete_option(MISHGALLERY_PAGE_NAME.'_notice');
     }
 
-    public function includeScripts() {
+    public static function includeScripts() {
         wp_enqueue_script( 'galleria', MISHGALLERY_PLUGIN_URL.'galleria/galleria-1.4.2.min.js', array('jquery') );
         wp_enqueue_script( MISHGALLERY_PLUGIN_NAME.'_main', MISHGALLERY_PLUGIN_URL.'js/main.js', array('galleria') );
     }
     
-    public function includeStyles() {
+    public static function includeStyles() {
         wp_enqueue_style( MISHGALLERY_PLUGIN_NAME.'_plugin', MISHGALLERY_PLUGIN_URL.'css/plugin.css');
     }
     
-    public function showGallery($param) {
+    /**
+     * Обработчик шорткода
+     * @param array $param  парасетры из шорткода
+     * @return type
+     */
+    public static function showGallery($param) {
         $id = (int) $param['id'];
-        $gallery = $this->db->get_row($this->db->prepare(
+        $gallery = self::getDb()->get_row(self::getDb()->prepare(
                 "SELECT * FROM ".MISHGALLERY_DB_TABLE. " WHERE id = %d;", $id),
                 ARRAY_A
         );

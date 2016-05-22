@@ -3,72 +3,91 @@ namespace MishGallery;
 
 class AdminPage {
     
-    protected $db;
-    protected $render_page;
-    protected $params;
+    protected static $db = NULL;
+    protected static $render_page = MISHGALLERY_PLUGIN_DIR.'view/index.php';
+    protected static $params = array();
 
-    public function __construct() {
-        global $wpdb;
-        $this->db = $wpdb;
-        $this->render_page = MISHGALLERY_PLUGIN_DIR.'view/index.php';
-        $this->params = array();
+    public static function getDb() {
+        if(!self::$db){
+            global $wpdb;
+            self::$db = $wpdb;
+        }
+        return self::$db;
     }
 
-    public function run() {
-        add_action('init', array($this, 'router'));
-        add_action('admin_menu', array($this, 'addPage'));
-        add_action('admin_notices', array($this, 'showNotice'));
+    public static function run() {
+        add_action('init', array(__CLASS__, 'router'));
+        add_action('admin_menu', array(__CLASS__, 'addPage'));
+        add_action('admin_notices', array(__CLASS__, 'showNotice'));
     }
-            
-    public function addPage() {
+    
+    /**
+     * Добавление страницы плагина в меню авминки
+     */
+    public static function addPage() {
         $page_hook_suffix = add_menu_page('MishGallery: Настройки', 'MishGallery', 8, 
-                                            MISHGALLERY_PAGE_NAME, array($this, 'render'));
-        add_action('admin_print_scripts-' . $page_hook_suffix, array($this, 'includeScripts'));
-        add_action('admin_print_styles-' . $page_hook_suffix, array($this, 'includeStyles'));
+                                            MISHGALLERY_PAGE_NAME, array(__CLASS__, 'render'));
+        add_action('admin_print_scripts-' . $page_hook_suffix, array(__CLASS__, 'includeScripts'));
+        add_action('admin_print_styles-' . $page_hook_suffix, array(__CLASS__, 'includeStyles'));
         
     }
     
-    public function includeScripts() {
+    public static function includeScripts() {
         wp_enqueue_media();
     }
     
-    public function includeStyles() {
+    public static function includeStyles() {
         wp_enqueue_style( MISHGALLERY_PLUGIN_NAME.'_admin_page', MISHGALLERY_PLUGIN_URL.'css/admin-page.css');
     }
     
-    public function render() {
-        extract($this->params);
-        include_once ($this->render_page);
+    /**
+     * Отображение страницы плагина в меню авминки
+     */
+    public static function render() {
+        extract(self::$params);
+        include_once (self::$render_page);
     }
 
-    
-    public function router() {
+    /**
+     * Маршрутизатор
+     * (выполняется во время добавления страницы в меню админки, НО перед ее отображением)
+     */
+    public static function router() {
         if(isset($_GET['page']) && $_GET['page']===MISHGALLERY_PAGE_NAME){
             $action = (isset($_GET['action']))? $_GET['action']: NULL;
             switch ($action) {
                 case 'create':
-                    $this->createAction();
+                    self::createAction();
                     break;
                 case 'edit':
-                    $this->editAction();
+                    self::editAction();
                     break;
                 case 'delete':
-                    $this->deleteAction();
+                    self::deleteAction();
                     break;
                 default:
-                    $this->indexAction();
+                    self::indexAction();
             }
         }
     }
     
-    
-    public function indexAction() {
-        $this->params['galleries'] = $this->db->get_results('SELECT id, title FROM '.MISHGALLERY_DB_TABLE);
-        $this->render_page = MISHGALLERY_PLUGIN_DIR.'view/index.php';
+    /**
+     * Подготовка данных для отображения на главной странице плагина,
+     * т.е. список галерей
+     * Вызывается маршрутизатором
+     */
+    public static function indexAction() {
+        self::$params['galleries'] = self::getDb()->get_results('SELECT id, title FROM '.MISHGALLERY_DB_TABLE);
+        self::$render_page = MISHGALLERY_PLUGIN_DIR.'view/index.php';
     }
     
-    
-    public function createAction() {
+    /**
+     * Создание новой галереи.
+     * Если в теле запроса нет данных для создания, то отображает страницу создания галереи.
+     * Если данные есть, то обрабатывает их и перенаправляет на главную страницу
+     * Вызывается маршрутизатором
+     */
+    public static function createAction() {
         if(isset($_POST['submit']) && $_POST['submit']==='true'){
             $title = htmlentities($_POST['title']);
             $descr = htmlentities($_POST['description']);
@@ -79,7 +98,7 @@ class AdminPage {
                 }
             }
             
-            $this->db->insert(
+            self::getDb()->insert(
                 MISHGALLERY_DB_TABLE,
                 array(
                     'title' => $title,
@@ -89,7 +108,7 @@ class AdminPage {
                 array('%s', '%s', '%s')
             );
             
-            $this->setNotice(
+            self::setNotice(
                     'Галерея добавлена',
                     'updated'
             );
@@ -98,18 +117,23 @@ class AdminPage {
         }elseif (isset($_POST['submit']) && $_POST['submit']==='false') {
             wp_redirect('?page='.MISHGALLERY_PAGE_NAME);
         }
-        $this->params['gallery'] = array(
+        self::$params['gallery'] = array(
             'id' => 0,
             'title' => '',
             'description' => '',
             'images' => array(),
         );
-        $this->params['pagetype'] = 'create';
-        $this->render_page = MISHGALLERY_PLUGIN_DIR.'view/edit.php';
+        self::$params['pagetype'] = 'create';
+        self::$render_page = MISHGALLERY_PLUGIN_DIR.'view/edit.php';
     }
     
-    
-    public function editAction() {
+    /**
+     * Редактирование галереи.
+     * Если в теле запроса нет данных для редактирования, то отображает страницу редактирования галереи.
+     * Если данные есть, то обрабатывает их и перенаправляет на главную страницу
+     * Вызывается маршрутизатором
+     */
+    public static function editAction() {
         if(isset($_POST['submit']) && $_POST['submit']==='true'){
             $id = (int) $_POST['id'];
             $title = htmlentities($_POST['title']);
@@ -121,7 +145,7 @@ class AdminPage {
                 }
             }
             
-            $this->db->update(
+            self::getDb()->update(
                 MISHGALLERY_DB_TABLE,
                 array(
                     'title' => $title,
@@ -133,7 +157,7 @@ class AdminPage {
                 array('%d')
             );
             
-            $this->setNotice(
+            self::setNotice(
                     'Галерея обновлена',
                     'updated'
             );
@@ -145,25 +169,29 @@ class AdminPage {
         
         if(isset($_GET['id'])){
             $id = (int) $_GET['id'];
-            $gallery = $this->db->get_row($this->db->prepare(
+            $gallery = self::getDb()->get_row(self::getDb()->prepare(
                     "SELECT * FROM ".MISHGALLERY_DB_TABLE. " WHERE id = %d;", $id)
             );
             $gallery->images = unserialize($gallery->images);
-            $this->params['gallery'] = $gallery;
-            $this->params['pagetype'] = 'edit';
-            $this->render_page = MISHGALLERY_PLUGIN_DIR.'view/edit.php';
+            self::$params['gallery'] = $gallery;
+            self::$params['pagetype'] = 'edit';
+            self::$render_page = MISHGALLERY_PLUGIN_DIR.'view/edit.php';
         }
     }
     
-    public function deleteAction() {
+    /**
+     * Удаление галереи.
+     * Вызывается маршрутизатором
+     */
+    public static function deleteAction() {
         if(isset($_GET['id'])){
             $id = (int) $_GET['id'];
-            $this->db->delete(
+            self::getDb()->delete(
                 MISHGALLERY_DB_TABLE,
                 array('id' => $id,),
                 array('%d')
             );
-            $this->setNotice(
+            self::setNotice(
                     'Галерея удалена',
                     'updated'
             );
@@ -171,14 +199,40 @@ class AdminPage {
         }
     }
     
-    protected function setNotice($text, $css_class) {
+    
+    /**
+     * Следующие методы служат для передачи сообщений между страницами.
+     * Оба варианта (через сессию и через настройки WP) не срабатывают.
+     * Причина: перед редиректом выполняется метод showNotice() и сообщение затирается
+     */
+    
+    
+//    protected function setNotice($text, $css_class) {
+//        $notice = serialize(array(
+//            'text' => $text,
+//            'css_class' => $css_class,
+//        ));
+//        update_option(MISHGALLERY_PAGE_NAME.'_notice', $notice);
+//    }
+//    
+//    public function showNotice() {
+//        $notice = get_option(MISHGALLERY_PAGE_NAME.'_notice');
+//        if(!empty($notice)){
+//            $notice = unserialize($notice);
+//            extract($notice);
+//            update_option(MISHGALLERY_PAGE_NAME.'_notice', '');
+//            include_once (MISHGALLERY_PLUGIN_DIR.'view/notice.php');
+//        }
+//    }
+    
+    protected static function setNotice($text, $css_class) {
         $_SESSION['mish_gallery_notice'] = array(
             'text' => $text,
             'css_class' => $css_class,
         );
     }
     
-    public function showNotice() {
+    public static function showNotice() {
         if(isset($_SESSION['mish_gallery_notice'])){
             extract($_SESSION['mish_gallery_notice']);
             unset($_SESSION['mish_gallery_notice']);
