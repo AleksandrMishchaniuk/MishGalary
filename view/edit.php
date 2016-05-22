@@ -3,13 +3,13 @@
     $header_text = ($pagetype === 'edit')? 'Редактирование': 'Создание';
     $index = 0;
 ?>
-<h1><?= MISHGALARY_PLUGIN_NAME ?></h1>
+<h1><?= MISHGALLERY_PLUGIN_NAME ?></h1>
 <h2><?= $header_text ?> галереи</h2>
 <hr/>
 
 <form method="POST">
-    <input type="text" name="title" placeholder="Название галереи" value="<?= $galary->title; ?>"/><br/>
-    <textarea style="width: 400px;" name="description" placeholder="Краткое описание"><?= $galary->description; ?></textarea><br/>
+    <input type="text" name="title" placeholder="Название галереи" value="<?= $gallery->title; ?>"/><br/>
+    <textarea style="width: 400px;" name="description" placeholder="Краткое описание"><?= $gallery->description; ?></textarea><br/>
     
     <div class="div_mg_imgs">
         
@@ -24,8 +24,8 @@
             <input type="hidden"/>
         </div>
         
-        <?php if(!empty($galary->images)): ?>
-            <?php foreach($galary->images as $image_id): ?>
+        <?php if(!empty($gallery->images)): ?>
+            <?php foreach($gallery->images as $image_id): ?>
                 <?php
                     $image_attributes = wp_get_attachment_image_src( $image_id );
                     $src = $image_attributes[0];
@@ -51,7 +51,7 @@
         <button type="submit" name="submit" value="true"><?= $submit_btn; ?></button>
         <button type="submit" name="submit" value="false">Отменить</button>
         <?php if($pagetype === 'edit'): ?>
-            <input type="hidden" name="id" value="<?= $galary->id; ?>"/>
+            <input type="hidden" name="id" value="<?= $gallery->id; ?>"/>
         <?php endif; ?>
     </div>
 </form>

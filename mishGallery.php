@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: mishGalary
+Plugin Name: mishGallery
 Plugin URI: 
-Description: Simple galary for Wordpress
+Description: Simple gallery for Wordpress
 Version: 1.0.0
 Author: Aleksandr Mishchaniuk
 Author URI: 
@@ -24,20 +24,20 @@ Author URI:
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-namespace MishGalary;
+namespace MishGallery;
 
-define( 'MISHGALARY_PLUGIN_NAME', 'MishGalary' );
-define( 'MISHGALARY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'MISHGALARY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'MISHGALARY_PAGE_NAME', 'mish_galary' );
-define( 'MISHGALARY_DB_TABLE', 'wp_mish_galary' );
-define( 'MISHGALARY_SHORTCODE', 'mish_galary' );
+define( 'MISHGALLERY_PLUGIN_NAME', 'MishGallery' );
+define( 'MISHGALLERY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'MISHGALLERY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'MISHGALLERY_PAGE_NAME', 'mish_gallery' );
+define( 'MISHGALLERY_DB_TABLE', 'wp_mish_gallery' );
+define( 'MISHGALLERY_SHORTCODE', 'mish_gallery' );
 
 if(is_admin()){
-    require_once( MISHGALARY_PLUGIN_DIR . 'lib/AdminPage.php' );
-    $mishGalary_adminPage = new AdminPage();
-    $mishGalary_adminPage->run();
+    require_once( MISHGALLERY_PLUGIN_DIR . 'lib/AdminPage.php' );
+    $mishGallery_adminPage = new AdminPage();
+    $mishGallery_adminPage->run();
 }
-require_once( MISHGALARY_PLUGIN_DIR . 'lib/Plugin.php' );
-$mishGalary_plugin = new Plugin();
-$mishGalary_plugin->run();
+require_once( MISHGALLERY_PLUGIN_DIR . 'lib/Plugin.php' );
+$mishGallery_plugin = new Plugin();
+$mishGallery_plugin->run();
