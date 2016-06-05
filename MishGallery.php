@@ -33,11 +33,21 @@ define( 'MISHGALLERY_PAGE_NAME', 'mish_gallery' );
 define( 'MISHGALLERY_DB_TABLE', 'wp_mish_gallery' );
 define( 'MISHGALLERY_SHORTCODE', 'mish_gallery' );
 
+spl_autoload_register(function($class_name){
+    $class_name = str_replace(__NAMESPACE__.'\\', '', $class_name);
+    $dirs = array('core', 'controller', 'model');
+    foreach ($dirs as $dir){
+        $path = MISHGALLERY_PLUGIN_DIR . $dir .'/'. $class_name .'.php';
+        if(file_exists($path)){
+            include_once $path;
+            break;
+        }
+    }
+});
+
 if(is_admin()){
-    require_once( MISHGALLERY_PLUGIN_DIR . 'lib/AdminPage.php' );
-    AdminPage::run();
+    App::run();
 }
-require_once( MISHGALLERY_PLUGIN_DIR . 'lib/Plugin.php' );
 Plugin::run();
 
 register_activation_hook( __FILE__, array( __NAMESPACE__.'\Plugin', 'install' ) );

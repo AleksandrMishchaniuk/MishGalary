@@ -7,7 +7,7 @@
 <h2><?= $header_text ?> галереи</h2>
 <hr/>
 
-<form method="POST">
+<form method="POST" action="?page=mish_gallery&action=save">
     <label for="title"><strong>Название галереи</strong></label><br/>
     <input type="text" name="title" placeholder="Название галереи" value="<?= $gallery->title; ?>"/><br/>
     <label for="description"><strong>Описание галереи</strong></label><br/>
@@ -29,26 +29,19 @@
         </div>
         
         <?php if(!empty($gallery->images)): ?>
-            <?php foreach($gallery->images as $image_id): ?>
-                <?php
-                    $image_attributes = wp_get_attachment_image_src( $image_id, 'full' );
-                    $src = $image_attributes[0];
-                    if(!$src){
-                        $src = MISHGALLERY_PLUGIN_URL.'img/default.gif';
-                    }
-                ?>
+            <?php for($i=0; $i<count($gallery->images); $i++): ?>
                 <div class="mishGallery_admin_page_image_div">
                     <div class="mishGallery_admin_page_image_wrap">
-                        <img src="<?= $src; ?>" class="mishGallery_admin_page_image"/>
+                        <img src="<?= $gallery->images_src[$i]; ?>" class="mishGallery_admin_page_image"/>
                     </div>
                     <div class="mishGallery_admin_page_image_buttons">
                         <button type="button" class="change_img">Изменить</button>
                         <button type="button" class="delete_img">Удалить</button>
                     </div>
-                    <input type="hidden" name="img_<?= $index; ?>" value="<?= $image_id; ?>"/>
+                    <input type="hidden" name="img_<?= $index; ?>" value="<?= $gallery->images[$i]; ?>"/>
                 </div>
                 <?php $index++; ?>
-            <?php endforeach; ?>
+            <?php endfor; ?>
         <?php endif; ?>
         
     </div>
